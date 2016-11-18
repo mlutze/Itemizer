@@ -1,6 +1,7 @@
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Main {
@@ -20,15 +21,27 @@ public class Main {
 
 	public static void main(String[] args) throws AWTException {		
 		/* Set defaults */
-		if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+		String osName = System.getProperty("os.name","generic").toLowerCase(Locale.ENGLISH);
+		automaton = new Automaton();
+		commandDelay = 333;
+		releaseDelay = 5;
+		
+		
+		/* Parse Args */
+		String arg;
+		for (int i = 0; i < args.length; i++) {
+			arg = args[i];
+			if (arg.equalsIgnoreCase("-o") && i+1 < args.length) {
+				osName = args[i+1];
+			}
+		}
+		if (osName.contains("mac") || osName.contains("darwin")) {
 			modifierKey = KeyEvent.VK_META;
 		} else {
 			modifierKey = KeyEvent.VK_CONTROL;
 		}
-		automaton = new Automaton();
-		commandDelay = 333;
-		releaseDelay = 5;
-
+		
+		
 		ampCodes.put("Black", "&0");
 		ampCodes.put("Dark Blue", "&1");
 		ampCodes.put("Dark Green", "&2");
