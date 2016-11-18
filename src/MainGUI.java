@@ -26,6 +26,8 @@ public class MainGUI extends GUI {
 	
 	/* Instance */
 	MainGUI self = this;
+	
+	GrabAndRelease grabAndRelease = new GrabAndRelease();
 
 	/* GUI Panels */
 	private JPanel nwPanel = new JPanel();
@@ -57,6 +59,8 @@ public class MainGUI extends GUI {
 	private JComboBox<String> insertFormatCodeCombo = new JComboBox<>(Main.formats);
 
 	private JButton grabButton = new JButton("Grab");
+	private JButton dropButton = new JButton("Drop");
+	
 	private JProgressBar timerProgressBar = new JProgressBar();
 
 	private JTextArea itemInfoTextArea = new JTextArea();
@@ -176,7 +180,13 @@ public class MainGUI extends GUI {
 	private ActionListener onClickGrab = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			(new GrabAndRelease()).execute();
+			grabAndRelease.execute();
+		}
+	};
+	private ActionListener onClickDrop = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			grabAndRelease.drop();
 		}
 	};
 
@@ -230,10 +240,12 @@ public class MainGUI extends GUI {
 
 		/* SE Panel */
 		grabButton.addActionListener(onClickGrab);
+		dropButton.addActionListener(onClickDrop);
 		timerProgressBar.setMinimum(0);
 		timerProgressBar.setMaximum(100);
 		timerProgressBar.setValue(0);
 		sePanel.add(grabButton);
+		sePanel.add(dropButton);
 		sePanel.add(timerProgressBar);
 
 		/* N Panel */
@@ -334,9 +346,11 @@ public class MainGUI extends GUI {
 	}
 
 	private class GrabAndRelease extends SwingWorker<Integer, Integer> {
+		private boolean dropped;
 
 		@Override
 		protected Integer doInBackground() throws Exception {
+			dropped = false;
 			int fps = 10;
 			int fullDelay = fps * Main.releaseDelay;
 			int subDelay = 1000 / fps;
@@ -345,6 +359,9 @@ public class MainGUI extends GUI {
 				Main.automaton.delay(subDelay);
 				percent = i * 100 / fullDelay;
 				timerProgressBar.setValue(percent);
+				if (dropped) {
+					return 1;
+				}
 			}
 			String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
 			Scanner sc = new Scanner(filled);
@@ -357,6 +374,10 @@ public class MainGUI extends GUI {
 			sc.close();
 			Main.automaton.sendCommands(commands);
 			return 0;
+		}
+		
+		protected void drop() {
+			dropped = true;
 		}
 	}
 }
