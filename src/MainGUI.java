@@ -180,13 +180,14 @@ public class MainGUI extends GUI {
 	private ActionListener onClickGrab = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			grabAndRelease = new GrabAndRelease();
 			grabAndRelease.execute();
 		}
 	};
 	private ActionListener onClickDrop = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			grabAndRelease.drop();
+			grabAndRelease.cancel(true);
 		}
 	};
 
@@ -346,20 +347,21 @@ public class MainGUI extends GUI {
 	}
 
 	private class GrabAndRelease extends SwingWorker<Integer, Integer> {
-		private boolean dropped;
 
 		@Override
-		protected Integer doInBackground() throws Exception {
-			dropped = false;
+		protected Integer doInBackground() {
 			int fps = 10;
 			int fullDelay = fps * Main.releaseDelay;
 			int subDelay = 1000 / fps;
 			int percent;
 			for (int i = 1; i <= fullDelay; i++) {
-				Main.automaton.delay(subDelay);
+				try {
+					Thread.sleep(subDelay);
+				} catch (InterruptedException ignored) {
+				}
 				percent = i * 100 / fullDelay;
 				timerProgressBar.setValue(percent);
-				if (dropped) {
+				if(isCancelled()) {
 					return 1;
 				}
 			}
@@ -374,10 +376,6 @@ public class MainGUI extends GUI {
 			sc.close();
 			Main.automaton.sendCommands(commands);
 			return 0;
-		}
-		
-		protected void drop() {
-			dropped = true;
 		}
 	}
 }
