@@ -9,7 +9,7 @@ public class Main {
 
 	/* Options */
 	protected static int modifierKey;
-	protected static int commandDelay;
+	protected static int commandSpeed;
 	protected static int releaseDelay;
 
 	protected static Automaton automaton;
@@ -23,7 +23,7 @@ public class Main {
 		/* Set defaults */
 		String osName = System.getProperty("os.name","generic").toLowerCase(Locale.ENGLISH);
 		automaton = new Automaton();
-		commandDelay = 333;
+		commandSpeed = 60;
 		releaseDelay = 5;
 		
 		

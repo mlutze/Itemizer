@@ -52,12 +52,13 @@ public class Automaton extends Robot implements ClipboardOwner {
 	}
 	
 	private void sendCommandUnprotected(String string) {
+		int delay = 60000 / Main.commandSpeed / 3;
 		keyTap(KeyEvent.VK_SLASH);
-		delay(Main.commandDelay);
+		delay(delay);
 		sendStringUnprotected(string);
-		delay(Main.commandDelay);
+		delay(delay);
 		keyTap(KeyEvent.VK_ENTER);
-		delay(Main.commandDelay);
+		delay(delay);
 	}
 	
 	public void sendCommand(String string) {

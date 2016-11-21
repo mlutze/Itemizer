@@ -18,8 +18,8 @@ public class OptionsGUI extends GUI {
 	/* GUI Items */
 	private JLabel timerLabel = new JLabel("Timer (sec):");
 	private JTextField timerField = new JTextField(8);
-	private JLabel commandDelay = new JLabel("Output delay (ms):");
-	private JTextField delayField = new JTextField(8);
+	private JLabel commandSpeed = new JLabel("Output speed (cpm):");
+	private JTextField speedField = new JTextField(8);
 	private JButton cancelButton = new JButton("Cancel");
 	private JButton okButton = new JButton("OK");
 
@@ -35,9 +35,9 @@ public class OptionsGUI extends GUI {
 				ok = false;
 			}
 			try {
-				Main.commandDelay = (int) Float.parseFloat(delayField.getText());
+				Main.commandSpeed = (int) Float.parseFloat(speedField.getText());
 			} catch (NumberFormatException nfe) {
-				delayField.setText("Number Only");
+				speedField.setText("Number Only");
 				ok = false;
 			}
 			if (ok) {
@@ -89,12 +89,12 @@ public class OptionsGUI extends GUI {
 		setLayout(new FlowLayout());
 		
 		timerField.setText(""+Main.releaseDelay);
-		delayField.setText(""+Main.commandDelay);
+		speedField.setText(""+Main.commandSpeed);
 		
 		cancelButton.addActionListener(onClickCancel);
 		okButton.addActionListener(onClickOk);
 		
-		addAll(timerLabel, timerField, commandDelay, delayField, cancelButton, okButton);
+		addAll(timerLabel, timerField, commandSpeed, speedField, cancelButton, okButton);
 		addWindowListener(windowListener);
 		pack();
 		setVisible(true);
