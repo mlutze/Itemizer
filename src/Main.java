@@ -8,7 +8,8 @@ public class Main {
 
 
 	/* Options */
-	protected static int modifierKey;
+	protected static int copyKey;
+	protected static int pasteKey;
 	protected static int commandSpeed;
 	protected static int releaseDelay;
 
@@ -36,9 +37,9 @@ public class Main {
 			}
 		}
 		if (osName.contains("mac") || osName.contains("darwin")) {
-			modifierKey = KeyEvent.VK_META;
+			copyKey = KeyEvent.VK_META;
 		} else {
-			modifierKey = KeyEvent.VK_CONTROL;
+			copyKey = KeyEvent.VK_CONTROL;
 		}
 		
 		
