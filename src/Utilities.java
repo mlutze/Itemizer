@@ -73,6 +73,10 @@ public class Utilities {
 			if (!firstLine) {
 				sb.append('\n');
 			}
+			if (line.startsWith("&*")) {
+				sb.append(line.substring(2));
+				continue;
+			}
 			lineLength = 0;
 			words = line.split(" ");
 			for (String word : words) {
@@ -84,6 +88,7 @@ public class Utilities {
 				sb.append(' ');
 				lineLength += word.length() + 1;
 			}
+			firstLine = false;
 		}
 		return sb.toString();
 	}
