@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class Main {
 
-
 	/* Options */
 	protected static int copyKey;
 	protected static int pasteKey;
@@ -16,24 +15,25 @@ public class Main {
 	protected static Automaton automaton;
 
 	protected static Map<String, String> ampCodes = new HashMap<>();
-	protected static String[] colors = { "Insert Color Code", "Black", "Dark Blue", "Dark Green", "Dark Aqua", "Dark Red", "Dark Purple",
-			"Gold", "Gray", "Dark Gray", "Blue", "Green", "Aqua", "Red", "Light Purple", "Yellow", "White" };
-	protected static String[] formats = { "Insert Format Code", "Obfuscated", "Bold", "Strikethrough", "Underline", "Italic", "Reset", "No Wrap" };
+	protected static String[] colors = { "Insert Color Code", "Black", "Dark Blue", "Dark Green", "Dark Aqua",
+			"Dark Red", "Dark Purple", "Gold", "Gray", "Dark Gray", "Blue", "Green", "Aqua", "Red", "Light Purple",
+			"Yellow", "White" };
+	protected static String[] formats = { "Insert Format Code", "Obfuscated", "Bold", "Strikethrough", "Underline",
+			"Italic", "Reset", "No Wrap" };
 
-	public static void main(String[] args) throws AWTException {		
+	public static void main(String[] args) throws AWTException {
 		/* Set defaults */
-		String osName = System.getProperty("os.name","generic").toLowerCase(Locale.ENGLISH);
+		String osName = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
 		automaton = new Automaton();
 		commandSpeed = 60;
 		releaseDelay = 5;
-		
-		
+
 		/* Parse Args */
 		String arg;
 		for (int i = 0; i < args.length; i++) {
 			arg = args[i];
-			if (arg.equalsIgnoreCase("-o") && i+1 < args.length) {
-				osName = args[i+1];
+			if (arg.equalsIgnoreCase("-o") && i + 1 < args.length) {
+				osName = args[i + 1];
 			}
 		}
 		if (osName.contains("mac") || osName.contains("darwin")) {
@@ -41,8 +41,8 @@ public class Main {
 		} else {
 			copyKey = KeyEvent.VK_CONTROL;
 		}
-		
-		
+		pasteKey = KeyEvent.VK_CONTROL;
+
 		ampCodes.put("Black", "&0");
 		ampCodes.put("Dark Blue", "&1");
 		ampCodes.put("Dark Green", "&2");
@@ -67,7 +67,7 @@ public class Main {
 		ampCodes.put("Reset", "&r");
 		ampCodes.put("No Wrap", "&*");
 		ampCodes.put("Insert Color Code", "");
-		ampCodes.put("Insert Format Code","");
+		ampCodes.put("Insert Format Code", "");
 
 		/* Open MainGUI */
 		MainGUI mainGui = new MainGUI();
