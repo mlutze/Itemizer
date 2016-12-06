@@ -7,7 +7,6 @@ import java.util.Map;
 public class Main {
 
 	/* Options */
-	protected static int copyKey;
 	protected static int pasteKey;
 	protected static int commandSpeed;
 	protected static int releaseDelay;
@@ -23,24 +22,9 @@ public class Main {
 
 	public static void main(String[] args) throws AWTException {
 		/* Set defaults */
-		String osName = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
 		automaton = new Automaton();
 		commandSpeed = 60;
 		releaseDelay = 5;
-
-		/* Parse Args */
-		String arg;
-		for (int i = 0; i < args.length; i++) {
-			arg = args[i];
-			if (arg.equalsIgnoreCase("-o") && i + 1 < args.length) {
-				osName = args[i + 1];
-			}
-		}
-		if (osName.contains("mac") || osName.contains("darwin")) {
-			copyKey = KeyEvent.VK_META;
-		} else {
-			copyKey = KeyEvent.VK_CONTROL;
-		}
 		pasteKey = KeyEvent.VK_CONTROL;
 
 		ampCodes.put("Black", "&0");

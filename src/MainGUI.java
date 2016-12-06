@@ -23,10 +23,10 @@ import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class MainGUI extends GUI {
-	
+
 	/* Instance */
 	MainGUI self = this;
-	
+
 	GrabAndRelease grabAndRelease = new GrabAndRelease();
 
 	/* GUI Panels */
@@ -50,7 +50,7 @@ public class MainGUI extends GUI {
 	private JButton saveTemplateButton = new JButton("Save Template");
 	private JButton clearTemplateButton = new JButton("Clear Template");
 
-	//private JSlider wrapSlider = new JSlider();
+	// private JSlider wrapSlider = new JSlider();
 
 	private JButton optionsButton = new JButton("Options");
 	private JButton helpButton = new JButton("Help");
@@ -60,7 +60,7 @@ public class MainGUI extends GUI {
 
 	private JButton grabButton = new JButton("Grab");
 	private JButton dropButton = new JButton("Drop");
-	
+
 	private JProgressBar timerProgressBar = new JProgressBar();
 
 	private JTextArea itemInfoTextArea = new JTextArea();
@@ -134,12 +134,12 @@ public class MainGUI extends GUI {
 			templateTextArea.setText("");
 		}
 	};
-//	private ChangeListener onChangeWidth = new ChangeListener() {
-//		@Override
-//		public void stateChanged(ChangeEvent e) {
-//			// TODO Auto-generated method stub
-//		}
-//	};
+	// private ChangeListener onChangeWidth = new ChangeListener() {
+	// @Override
+	// public void stateChanged(ChangeEvent e) {
+	// // TODO Auto-generated method stub
+	// }
+	// };
 	private ActionListener onClickOptions = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -214,18 +214,13 @@ public class MainGUI extends GUI {
 
 		/* SW Panel */
 		/*
-		wrapSlider.addChangeListener(onChangeWidth);
-		wrapSlider.setMinimum(8);
-		wrapSlider.setMaximum(64);
-		wrapSlider.setPaintTicks(true);
-		wrapSlider.setMajorTickSpacing(8);
-		wrapSlider.setMinorTickSpacing(2);
-		wrapSlider.setSnapToTicks(true);
-		wrapSlider.setPaintLabels(true);
-		wrapSlider.setValue(32);
-		swPanel.add(new JLabel("Width"));
-		swPanel.add(wrapSlider);
-		*/
+		 * wrapSlider.addChangeListener(onChangeWidth);
+		 * wrapSlider.setMinimum(8); wrapSlider.setMaximum(64);
+		 * wrapSlider.setPaintTicks(true); wrapSlider.setMajorTickSpacing(8);
+		 * wrapSlider.setMinorTickSpacing(2); wrapSlider.setSnapToTicks(true);
+		 * wrapSlider.setPaintLabels(true); wrapSlider.setValue(32);
+		 * swPanel.add(new JLabel("Width")); swPanel.add(wrapSlider);
+		 */
 
 		/* NE Panel */
 		optionsButton.addActionListener(onClickOptions);
@@ -286,7 +281,7 @@ public class MainGUI extends GUI {
 		}
 		itemInfoTextArea.setText(sb.toString());
 	}
-	
+
 	private void loadItem(File file) throws IOException {
 		Scanner sc = new Scanner(file);
 		int infoLines = Integer.parseInt(sc.nextLine());
@@ -300,7 +295,7 @@ public class MainGUI extends GUI {
 			notFirstLine = true;
 		}
 		itemInfoTextArea.setText(sb.toString());
-		
+
 		sb = new StringBuilder();
 		notFirstLine = false;
 		while (sc.hasNextLine()) {
@@ -317,7 +312,7 @@ public class MainGUI extends GUI {
 	private void saveTemplate(File file) throws IOException {
 		Utilities.writeStringToFile(templateTextArea.getText(), file);
 	}
-	
+
 	private void saveItem(File file) throws IOException {
 		Utilities.writeStringToFile(buildItemString(), file);
 	}
@@ -327,7 +322,7 @@ public class MainGUI extends GUI {
 		String html = Utilities.minecraftCodeToHtml(filled);
 		previewTextPane.setText(html);
 	}
-	
+
 	private String buildItemString() {
 		StringBuilder sb = new StringBuilder();
 		String itemInfo = itemInfoTextArea.getText();
@@ -335,7 +330,7 @@ public class MainGUI extends GUI {
 		int lineCount = 1;
 		for (int i = 0; i < itemInfo.length(); i++) {
 			if (itemInfo.charAt(i) == '\n') {
-					lineCount++;
+				lineCount++;
 			}
 		}
 		sb.append(lineCount);
@@ -361,7 +356,7 @@ public class MainGUI extends GUI {
 				}
 				percent = i * 100 / fullDelay;
 				timerProgressBar.setValue(percent);
-				if(isCancelled()) {
+				if (isCancelled()) {
 					return 1;
 				}
 			}

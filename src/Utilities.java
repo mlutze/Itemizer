@@ -44,9 +44,9 @@ public class Utilities {
 				continue;
 			} else {
 				var = line.substring(0, equals).trim();
-				value = line.substring(equals+1).trim();
+				value = line.substring(equals + 1).trim();
 			}
-			filled = filled.replace("{"+var+"}", value);
+			filled = filled.replace("{" + var + "}", value);
 		}
 		return filled;
 	}
@@ -54,7 +54,7 @@ public class Utilities {
 	public static String minecraftCodeToHtml(String code) {
 		return HTMLBuilder.convert(code);
 	}
-	
+
 	public static Set<String> getVariables(String template) {
 		Set<String> variables = new HashSet<>();
 		Matcher m = Pattern.compile("\\{([^\\{\\}]*)\\}").matcher(template);
@@ -127,7 +127,7 @@ public class Utilities {
 		}
 
 		private void clearStyle() {
-			for(; depth > 0; depth--) {
+			for (; depth > 0; depth--) {
 				sb.append("</span>");
 			}
 		}
