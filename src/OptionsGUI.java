@@ -162,5 +162,6 @@ public class OptionsGUI extends GUI {
 		addAll(timerPanel, speedPanel, pasteKeyPanel, cancelButton, okButton);
 		addWindowListener(windowListener);
 		pack();
+		setVisible(true);
 	}
 }
