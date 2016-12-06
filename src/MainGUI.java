@@ -12,12 +12,16 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -50,7 +54,7 @@ public class MainGUI extends GUI {
 	private JButton saveTemplateButton = new JButton("Save Template");
 	private JButton clearTemplateButton = new JButton("Clear Template");
 
-	// private JSlider wrapSlider = new JSlider();
+	private JSlider wrapSlider = new JSlider();
 
 	private JButton optionsButton = new JButton("Options");
 	private JButton helpButton = new JButton("Help");
@@ -134,12 +138,12 @@ public class MainGUI extends GUI {
 			templateTextArea.setText("");
 		}
 	};
-	// private ChangeListener onChangeWidth = new ChangeListener() {
-	// @Override
-	// public void stateChanged(ChangeEvent e) {
-	// // TODO Auto-generated method stub
-	// }
-	// };
+	private ChangeListener onChangeWidth = new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			updatePreview();
+		}
+	};
 	private ActionListener onClickOptions = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -213,14 +217,18 @@ public class MainGUI extends GUI {
 		wPanel.add(clearTemplateButton);
 
 		/* SW Panel */
-		/*
-		 * wrapSlider.addChangeListener(onChangeWidth);
-		 * wrapSlider.setMinimum(8); wrapSlider.setMaximum(64);
-		 * wrapSlider.setPaintTicks(true); wrapSlider.setMajorTickSpacing(8);
-		 * wrapSlider.setMinorTickSpacing(2); wrapSlider.setSnapToTicks(true);
-		 * wrapSlider.setPaintLabels(true); wrapSlider.setValue(32);
-		 * swPanel.add(new JLabel("Width")); swPanel.add(wrapSlider);
-		 */
+
+		wrapSlider.addChangeListener(onChangeWidth);
+		wrapSlider.setMinimum(8);
+		wrapSlider.setMaximum(64);
+		wrapSlider.setPaintTicks(true);
+		wrapSlider.setMajorTickSpacing(8);
+		wrapSlider.setMinorTickSpacing(2);
+		wrapSlider.setSnapToTicks(true);
+		wrapSlider.setPaintLabels(true);
+		wrapSlider.setValue(32);
+		swPanel.add(new JLabel("Width"));
+		swPanel.add(wrapSlider);
 
 		/* NE Panel */
 		optionsButton.addActionListener(onClickOptions);
@@ -318,9 +326,14 @@ public class MainGUI extends GUI {
 	}
 
 	private void updatePreview() {
-		String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
-		String html = Utilities.minecraftCodeToHtml(filled);
+		String wrapped = getCommandLines();
+		String html = Utilities.minecraftCodeToHtml(wrapped);
 		previewTextPane.setText(html);
+	}
+
+	private String getCommandLines() {
+		String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
+		return Utilities.wrapCode(filled, wrapSlider.getValue());
 	}
 
 	private String buildItemString() {
@@ -360,8 +373,8 @@ public class MainGUI extends GUI {
 					return 1;
 				}
 			}
-			String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
-			Scanner sc = new Scanner(filled);
+			String wrapped = getCommandLines();
+			Scanner sc = new Scanner(wrapped);
 			List<String> commands = new LinkedList<>();
 			commands.add("itemizer clear name lore");
 			commands.add("itemizer name " + sc.nextLine());
