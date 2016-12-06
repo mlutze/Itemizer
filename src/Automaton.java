@@ -9,63 +9,65 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class Automaton extends Robot implements ClipboardOwner {
-	
+
 	private Transferable clipboardCache;
 	private Clipboard clipboard;
-	
+
 	public Automaton() throws AWTException {
 		super();
 		clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	}
-	
+
 	public void sendString(String string) {
 		cacheClipboard();
 		sendStringUnprotected(string);
 		decacheClipboard();
 	}
-	
+
 	private void sendStringUnprotected(String string) {
 		fillClipboard(string);
 		sendPaste();
 	}
+
 	private void cacheClipboard() {
 		clipboardCache = clipboard.getContents(this);
 	}
-	
+
 	private void fillClipboard(String string) {
 		clipboard.setContents(new StringSelection(string), this);
 	}
-	
+
 	private void sendPaste() {
-		keyPress(KeyEvent.VK_CONTROL);
+		keyPress(Main.pasteKey);
 		keyTap(KeyEvent.VK_V);
-		keyRelease(KeyEvent.VK_CONTROL);
+		keyRelease(Main.pasteKey);
 	}
-	
+
 	private void decacheClipboard() {
 		clipboard.setContents(clipboardCache, this);
 	}
-	
+
 	public void keyTap(int key) {
 		keyPress(key);
 		keyRelease(key);
 	}
-	
+
 	private void sendCommandUnprotected(String string) {
+		int delay = 60000 / Main.commandSpeed / 3;
 		keyTap(KeyEvent.VK_SLASH);
-		delay(Main.commandDelay);
+		delay(delay);
 		sendStringUnprotected(string);
-		delay(Main.commandDelay);
+		delay(delay);
 		keyTap(KeyEvent.VK_ENTER);
-		delay(Main.commandDelay);
+		delay(delay);
 	}
-	
+
 	public void sendCommand(String string) {
 		cacheClipboard();
 		sendCommandUnprotected(string);
 		decacheClipboard();
 	}
-	
+
 	public void sendCommands(List<String> strings) {
 		cacheClipboard();
 		for (String string : strings) {

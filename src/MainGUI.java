@@ -12,20 +12,26 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class MainGUI extends GUI {
-	
+
 	/* Instance */
 	MainGUI self = this;
+
+	GrabAndRelease grabAndRelease = new GrabAndRelease();
 
 	/* GUI Panels */
 	private JPanel nwPanel = new JPanel();
@@ -48,7 +54,7 @@ public class MainGUI extends GUI {
 	private JButton saveTemplateButton = new JButton("Save Template");
 	private JButton clearTemplateButton = new JButton("Clear Template");
 
-	//private JSlider wrapSlider = new JSlider();
+	private JSlider wrapSlider = new JSlider();
 
 	private JButton optionsButton = new JButton("Options");
 	private JButton helpButton = new JButton("Help");
@@ -57,6 +63,8 @@ public class MainGUI extends GUI {
 	private JComboBox<String> insertFormatCodeCombo = new JComboBox<>(Main.formats);
 
 	private JButton grabButton = new JButton("Grab");
+	private JButton dropButton = new JButton("Drop");
+
 	private JProgressBar timerProgressBar = new JProgressBar();
 
 	private JTextArea itemInfoTextArea = new JTextArea();
@@ -130,12 +138,12 @@ public class MainGUI extends GUI {
 			templateTextArea.setText("");
 		}
 	};
-//	private ChangeListener onChangeWidth = new ChangeListener() {
-//		@Override
-//		public void stateChanged(ChangeEvent e) {
-//			// TODO Auto-generated method stub
-//		}
-//	};
+	private ChangeListener onChangeWidth = new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			updatePreview();
+		}
+	};
 	private ActionListener onClickOptions = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -176,7 +184,14 @@ public class MainGUI extends GUI {
 	private ActionListener onClickGrab = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			(new GrabAndRelease()).execute();
+			grabAndRelease = new GrabAndRelease();
+			grabAndRelease.execute();
+		}
+	};
+	private ActionListener onClickDrop = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			grabAndRelease.cancel(true);
 		}
 	};
 
@@ -202,7 +217,7 @@ public class MainGUI extends GUI {
 		wPanel.add(clearTemplateButton);
 
 		/* SW Panel */
-		/*
+
 		wrapSlider.addChangeListener(onChangeWidth);
 		wrapSlider.setMinimum(8);
 		wrapSlider.setMaximum(64);
@@ -214,7 +229,6 @@ public class MainGUI extends GUI {
 		wrapSlider.setValue(32);
 		swPanel.add(new JLabel("Width"));
 		swPanel.add(wrapSlider);
-		*/
 
 		/* NE Panel */
 		optionsButton.addActionListener(onClickOptions);
@@ -230,10 +244,12 @@ public class MainGUI extends GUI {
 
 		/* SE Panel */
 		grabButton.addActionListener(onClickGrab);
+		dropButton.addActionListener(onClickDrop);
 		timerProgressBar.setMinimum(0);
 		timerProgressBar.setMaximum(100);
 		timerProgressBar.setValue(0);
 		sePanel.add(grabButton);
+		sePanel.add(dropButton);
 		sePanel.add(timerProgressBar);
 
 		/* N Panel */
@@ -273,7 +289,7 @@ public class MainGUI extends GUI {
 		}
 		itemInfoTextArea.setText(sb.toString());
 	}
-	
+
 	private void loadItem(File file) throws IOException {
 		Scanner sc = new Scanner(file);
 		int infoLines = Integer.parseInt(sc.nextLine());
@@ -287,7 +303,7 @@ public class MainGUI extends GUI {
 			notFirstLine = true;
 		}
 		itemInfoTextArea.setText(sb.toString());
-		
+
 		sb = new StringBuilder();
 		notFirstLine = false;
 		while (sc.hasNextLine()) {
@@ -304,17 +320,22 @@ public class MainGUI extends GUI {
 	private void saveTemplate(File file) throws IOException {
 		Utilities.writeStringToFile(templateTextArea.getText(), file);
 	}
-	
+
 	private void saveItem(File file) throws IOException {
 		Utilities.writeStringToFile(buildItemString(), file);
 	}
 
 	private void updatePreview() {
-		String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
-		String html = Utilities.minecraftCodeToHtml(filled);
+		String wrapped = getCommandLines();
+		String html = Utilities.minecraftCodeToHtml(wrapped);
 		previewTextPane.setText(html);
 	}
-	
+
+	private String getCommandLines() {
+		String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
+		return Utilities.wrapCode(filled, wrapSlider.getValue());
+	}
+
 	private String buildItemString() {
 		StringBuilder sb = new StringBuilder();
 		String itemInfo = itemInfoTextArea.getText();
@@ -322,7 +343,7 @@ public class MainGUI extends GUI {
 		int lineCount = 1;
 		for (int i = 0; i < itemInfo.length(); i++) {
 			if (itemInfo.charAt(i) == '\n') {
-					lineCount++;
+				lineCount++;
 			}
 		}
 		sb.append(lineCount);
@@ -336,18 +357,24 @@ public class MainGUI extends GUI {
 	private class GrabAndRelease extends SwingWorker<Integer, Integer> {
 
 		@Override
-		protected Integer doInBackground() throws Exception {
+		protected Integer doInBackground() {
 			int fps = 10;
 			int fullDelay = fps * Main.releaseDelay;
 			int subDelay = 1000 / fps;
 			int percent;
 			for (int i = 1; i <= fullDelay; i++) {
-				Main.automaton.delay(subDelay);
+				try {
+					Thread.sleep(subDelay);
+				} catch (InterruptedException ignored) {
+				}
 				percent = i * 100 / fullDelay;
 				timerProgressBar.setValue(percent);
+				if (isCancelled()) {
+					return 1;
+				}
 			}
-			String filled = Utilities.fillTemplate(itemInfoTextArea.getText(), templateTextArea.getText());
-			Scanner sc = new Scanner(filled);
+			String wrapped = getCommandLines();
+			Scanner sc = new Scanner(wrapped);
 			List<String> commands = new LinkedList<>();
 			commands.add("itemizer clear name lore");
 			commands.add("itemizer name " + sc.nextLine());

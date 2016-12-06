@@ -44,9 +44,9 @@ public class Utilities {
 				continue;
 			} else {
 				var = line.substring(0, equals).trim();
-				value = line.substring(equals+1).trim();
+				value = line.substring(equals + 1).trim();
 			}
-			filled = filled.replace("{"+var+"}", value);
+			filled = filled.replace("{" + var + "}", value);
 		}
 		return filled;
 	}
@@ -54,7 +54,7 @@ public class Utilities {
 	public static String minecraftCodeToHtml(String code) {
 		return HTMLBuilder.convert(code);
 	}
-	
+
 	public static Set<String> getVariables(String template) {
 		Set<String> variables = new HashSet<>();
 		Matcher m = Pattern.compile("\\{([^\\{\\}]*)\\}").matcher(template);
@@ -62,6 +62,48 @@ public class Utilities {
 			variables.add(m.group(1));
 		}
 		return variables;
+	}
+
+	public static String wrapCode(String string, int width) {
+		StringBuilder sb = new StringBuilder();
+		int lineLength;
+		String[] words;
+		boolean firstLine = true;
+		for (String line : string.split("\n")) {
+			if (!firstLine) {
+				sb.append('\n');
+			}
+			if (line.startsWith("&*")) {
+				sb.append(line.substring(2));
+				continue;
+			}
+			lineLength = 0;
+			words = line.split(" ");
+			for (String word : words) {
+				if (lineLength + stripMCFormat(word).length() + 1 > width) {
+					sb.append('\n');
+					lineLength = 0;
+				}
+				sb.append(word);
+				sb.append(' ');
+				lineLength += word.length() + 1;
+			}
+			firstLine = false;
+		}
+		return sb.toString();
+	}
+
+	private static String stripMCFormat(String string) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < string.length(); i++) {
+			if (string.charAt(i) == '&' && i < string.length() - 1
+					&& "0123456789abcdefklmno".contains("" + string.charAt(i + 1))) {
+				i++;
+			} else {
+				sb.append(string.charAt(i));
+			}
+		}
+		return sb.toString();
 	}
 
 	private static class HTMLBuilder {
@@ -127,7 +169,7 @@ public class Utilities {
 		}
 
 		private void clearStyle() {
-			for(; depth > 0; depth--) {
+			for (; depth > 0; depth--) {
 				sb.append("</span>");
 			}
 		}
