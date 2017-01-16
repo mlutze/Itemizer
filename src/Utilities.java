@@ -1,8 +1,12 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,9 +15,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utilities {
+	public static final String ENCODING = "UTF-8";
+	
 	public static String readFileToString(File file) throws IOException {
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
+		FileInputStream fis = new FileInputStream(file);
+		InputStreamReader isr = new InputStreamReader(fis, ENCODING);
+		BufferedReader br = new BufferedReader(isr);
 		StringBuilder sb = new StringBuilder();
 		String line;
 		boolean notFirstLine = false;
@@ -29,9 +36,10 @@ public class Utilities {
 	}
 
 	public static void writeStringToFile(String string, File file) throws IOException {
-		FileWriter fw = new FileWriter(file);
-		fw.write(string);
-		fw.close();
+		FileOutputStream fos = new FileOutputStream(file);
+		OutputStreamWriter osw = new OutputStreamWriter(fos, ENCODING);
+		osw.write(string);
+		osw.close();
 	}
 
 	public static String fillTemplate(String info, String template) {
