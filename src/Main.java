@@ -1,7 +1,6 @@
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class Main {

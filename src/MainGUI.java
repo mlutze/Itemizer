@@ -376,10 +376,9 @@ public class MainGUI extends GUI {
 			String wrapped = getCommandLines();
 			Scanner sc = new Scanner(wrapped);
 			List<String> commands = new LinkedList<>();
-			commands.add("itemizer clear name lore");
-			commands.add("itemizer name " + sc.nextLine());
+			commands.add("lore name " + sc.nextLine());
 			while (sc.hasNextLine()) {
-				commands.add("itemizer advlore add " + sc.nextLine());
+				commands.add("lore add " + sc.nextLine());
 			}
 			sc.close();
 			Main.automaton.sendCommands(commands);
