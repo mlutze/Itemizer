@@ -7,7 +7,6 @@ public class Main {
 
 	/* Options */
 	protected static int pasteKey;
-	protected static int commandSpeed;
 	protected static int releaseDelay;
 
 	protected static Automaton automaton;
@@ -22,7 +21,6 @@ public class Main {
 	public static void main(String[] args) throws AWTException {
 		/* Set defaults */
 		automaton = new Automaton();
-		commandSpeed = 60;
 		releaseDelay = 5;
 		pasteKey = KeyEvent.VK_CONTROL;
 

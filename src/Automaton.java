@@ -39,7 +39,9 @@ public class Automaton extends Robot implements ClipboardOwner {
 
 	private void sendPaste() {
 		keyPress(Main.pasteKey);
+		delay(100);
 		keyTap(KeyEvent.VK_V);
+		delay(100);
 		keyRelease(Main.pasteKey);
 	}
 
@@ -53,7 +55,7 @@ public class Automaton extends Robot implements ClipboardOwner {
 	}
 
 	private void sendCommandUnprotected(String string) {
-		int delay = 60000 / Main.commandSpeed / 3;
+		int delay = 100;
 		keyTap(KeyEvent.VK_SLASH);
 		delay(delay);
 		sendStringUnprotected(string);

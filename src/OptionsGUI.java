@@ -27,10 +27,6 @@ public class OptionsGUI extends GUI {
 	private JTextField timerField = new JTextField(8);
 	private JPanel timerPanel = new JPanel();
 
-	private JLabel speedLabel = new JLabel("Output speed (cpm):");
-	private JTextField speedField = new JTextField(8);
-	private JPanel speedPanel = new JPanel();
-
 	private JLabel pasteKeyLabel = new JLabel("Paste modifier key:");
 	private JTextField pasteKeyField = new JTextField(8);
 	private JButton pasteKeyButton = new JButton("Change");
@@ -69,12 +65,6 @@ public class OptionsGUI extends GUI {
 				Main.releaseDelay = (int) Float.parseFloat(timerField.getText());
 			} catch (NumberFormatException nfe) {
 				timerField.setText("Number Only");
-				ok = false;
-			}
-			try {
-				Main.commandSpeed = (int) Float.parseFloat(speedField.getText());
-			} catch (NumberFormatException nfe) {
-				speedField.setText("Number Only");
 				ok = false;
 			}
 			Main.pasteKey = Integer.parseInt(pasteKeyField.getText());
@@ -144,10 +134,6 @@ public class OptionsGUI extends GUI {
 		timerPanel.add(timerLabel);
 		timerPanel.add(timerField);
 
-		speedField.setText("" + Main.commandSpeed);
-		speedPanel.add(speedLabel);
-		speedPanel.add(speedField);
-
 		pasteKeyField.setText("" + Main.pasteKey);
 		pasteKeyField.setEditable(false);
 		pasteKeyButton.addActionListener(onClickChangePaste);
@@ -159,7 +145,7 @@ public class OptionsGUI extends GUI {
 		cancelButton.addActionListener(onClickCancel);
 		okButton.addActionListener(onClickOk);
 
-		addAll(timerPanel, speedPanel, pasteKeyPanel, cancelButton, okButton);
+		addAll(timerPanel, pasteKeyPanel, cancelButton, okButton);
 		addWindowListener(windowListener);
 		pack();
 		setVisible(true);
